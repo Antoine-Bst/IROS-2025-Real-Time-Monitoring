@@ -116,7 +116,7 @@ A richer example with waypoints and deadlines is shown:
 ## What’s actually new here?
 
 1. A **real-time** STL monitor that reasons over **uncertain models** using guaranteed tubes and Boolean intervals without being only "theoretical approach".
-2. A **ROS implementation** ready for sim and real robots.
+2. A **ROS implementation** example ready for sim and real robots.
 3. An empirical **comparison to Monte-Carlo** showing you can get **guarantees** at practical speeds.&#x20;
 
 ---
