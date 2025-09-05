@@ -1,5 +1,5 @@
 The paper shows how to **predict and verify** a robot’s near-future behavior **with guarantees** and **in real time**. By simulating **set-valued tubes** under bounded uncertainties and checking an **STL spec** using **Boolean intervals**, the monitor returns **YES/NO/MAYBE** in a sound way. It runs as a **ROS node**, works on a drone experiment, and is **faster than Monte-Carlo** while enclosing it—making it a practical, safety-minded way to monitor robots with timing requirements.&#x20;
-
+*************
 Welcome ! This is a prototype for the verification of STL formula on reachable tube using Dynibex. It has been tested on Linux Ubuntu only.
 It uses DynIbex.
 
