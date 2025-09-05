@@ -42,3 +42,9 @@ predicate_satisfaction(sim, predicates); Constructs satisfaction signals for the
 The output is a list of signals corresponding to each predicate in the input list.
 
 print_Satisf_Signals(phi); Displays the satisfaction signal of a given formula.
+
+****************
+Image: Experiment with predicted set of trajectory and monitor flag.
+<p align="center">
+  <img src="expeiros.png" alt="IROS experiment" width="70%">
+</p>
