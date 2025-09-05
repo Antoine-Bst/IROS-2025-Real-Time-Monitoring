@@ -23,6 +23,9 @@ If everything works correctly, the output should be:
 (1, [0, 1[)
 ([0,1], [1, 10[)
 
+**************Important*************
+Moniteur MP is the monitoring algorithm, asservissement_PI is the control node of the DJI Tello. Use ROS 1
+************************************
 =====================================Small Documentation===================================
 The verification is performed in a bottom-up manner using the syntax tree of the formula and the satisfaction signals
 
