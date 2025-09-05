@@ -24,7 +24,7 @@ If everything works correctly, the output should be:
 ([0,1], [1, 10[)
 
 **************Important*************
-Moniteur MP is the monitoring algorithm, asservissement_PI is the control node of the DJI Tello. Use ROS 1
+Moniteur MP is the monitoring algorithm, asservissement_PI is the control node of the DJI Tello. Use ROS 1!
 Position measurement is performed using an optitrack with natnet_ros node
 ************************************
 =====================================Small Documentation===================================
