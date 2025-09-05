@@ -28,7 +28,7 @@ Moniteur MP is the monitoring algorithm, asservissement_PI is the control node o
 Position measurement is performed using an optitrack with natnet_ros node
 ************************************
 =====================================Small Documentation===================================
-The verification is performed in a bottom-up manner using the syntax tree of the formula and the satisfaction signals
+The verification is performed in a bottom-up manner using the syntax tree of the formula and the interval satisfaction signals
 
 phi1 = neg_stl(phi);             // Logical negation: ¬phi
 phi1 = and_stl(phi2, phi3);      // Logical AND: phi2 ∧ phi3
