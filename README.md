@@ -27,21 +27,38 @@ If everything works correctly, the output should be:
 Moniteur MP is the monitoring algorithm, asservissement_PI is the control node of the DJI Tello. Use ROS 1!
 Position measurement is performed using an optitrack with natnet_ros node
 ************************************
-=====================================Small Documentation===================================
-The verification is performed in a bottom-up manner using the syntax tree of the formula and the interval satisfaction signals
 
-phi1 = neg_stl(phi);             // Logical negation: ¬phi
-phi1 = and_stl(phi2, phi3);      // Logical AND: phi2 ∧ phi3
-phi1 = or_stl(phi2, phi3);       // Logical OR: phi2 ∨ phi3
-phi1 = until_stl(phi2, phi3, {t1, t2});  // Until operator: phi2 U[t1,t2] phi3
-phi1 = Finally(phi, {t1, t2});   // Eventually operator: F[t1,t2] phi
-phi1 = Globally(phi, {t1, t2});  // Always operator: G[t1,t2] phi
+## STL Formula Verification
 
+Verification is performed bottom-up using the syntax tree of the formula and satisfaction signals.
 
-predicate_satisfaction(sim, predicates); Constructs satisfaction signals for the list of predicates and the simulation object.
-The output is a list of signals corresponding to each predicate in the input list.
+Supported operators:
 
-print_Satisf_Signals(phi); Displays the satisfaction signal of a given formula.
+```
+phi1 = neg_stl(phi);                        // Logical negation: ¬phi
+phi1 = and_stl(phi2, phi3);                 // Logical AND: phi2 ∧ phi3
+phi1 = or_stl(phi2, phi3);                  // Logical OR: phi2 ∨ phi3
+phi1 = until_stl(phi2, phi3, {t1, t2});     // Until operator: phi2 U[t1,t2] phi3
+phi1 = Finally(phi, {t1, t2});              // Eventually operator: F[t1,t2] phi
+phi1 = Globally(phi, {t1, t2});             // Always operator: G[t1,t2] phi
+```
+
+Predicate satisfaction:
+
+```
+predicate_satisfaction(sim, predicates);
+```
+
+This constructs satisfaction signals for a list of predicates and the simulation object.
+The output is a list of signals corresponding to each predicate.
+
+Display signals:
+
+```
+print_Satisf_Signals(phi);
+```
+
+This displays the satisfaction signal of a given formula.
 
 ****************
 Image: Experiment with predicted set of trajectory and monitor flag.
