@@ -124,5 +124,5 @@ A richer example with waypoints and deadlines is shown:
 ## Practical notes & limits
 
 * The **horizon length** should match the STL time bounds: too short → you can’t decide; too long → tubes can over-inflate (conservative). Sliding horizons help balance this.&#x20;
-* First-order vs second-order: 1st is faster but more conservative; 2nd is tighter but heavier.* 
+* First-order vs second-order: 1st is faster but more conservative; 2nd is tighter but heavier.
 ---
