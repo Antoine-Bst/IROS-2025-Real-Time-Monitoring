@@ -25,6 +25,7 @@ If everything works correctly, the output should be:
 
 **************Important*************
 Moniteur MP is the monitoring algorithm, asservissement_PI is the control node of the DJI Tello. Use ROS 1
+Position measurement is performed using an optitrack with natnet_ros node
 ************************************
 =====================================Small Documentation===================================
 The verification is performed in a bottom-up manner using the syntax tree of the formula and the satisfaction signals
