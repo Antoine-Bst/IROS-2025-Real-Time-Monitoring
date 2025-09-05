@@ -81,7 +81,7 @@ Predict **all** possible futures over a short horizon as **set-valued tubes**, t
 
 ## The ingredients
 
-* **Tubes (validated sets over time).** Using DynIbex, you integrate the ODE with interval arithmetic so each time slice encloses all trajectories consistent with bounded uncertainties. Stack those slices and you get a “tube” \[ỹ]\(t). This is **guaranteed** (worst-case) reachability over the chosen horizon.&#x20;
+* **Tubes (validated sets over time).** Using DynIbex, you integrate the ODE with affine arithmetic so each time slice encloses all trajectories consistent with bounded uncertainties. Stack those slices and you get a “tube” \[ỹ]\(t). This is **guaranteed** (worst-case) reachability over the chosen horizon.&#x20;
 
 * **STL (logic with timing).** You write specs like “always stay in the safe set for the next N·τ seconds” or “if you reach waypoint p, then eventually park within \[c,d] seconds.” Temporal operators (`G`, `F`, `U`) come with **explicit time bounds**.&#x20;
 
