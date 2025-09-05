@@ -103,7 +103,7 @@ A simple reach-avoid STL spec:
 
 “Always avoid obstacles and always stay inside the flight zone over the horizon.” Predicates are evaluated over tubes via **inclusion** (“the whole tube is inside Xµ → 1”) and **disjointness** (“the tube doesn’t intersect Xµ → 1”); mixed cases give **\[0,1]**.&#x20;
 
-You also show a richer example with waypoints and deadlines:
+A richer example with waypoints and deadlines is shown:
 
 ```
 ϕflag2 = ( G[0,N·τ](¬μc ∧ (μp ⇒ F[c,d] μf)) ) ∧ ( μe U[a,b] μp )
