@@ -383,5 +383,5 @@ std::vector<vector<Satisf_Signal>> predicate_satisfaction(ibex::simulation& sim,
       result.push_back(P_satisf);
     }
 
-  return {result};
+  return result;
 }
