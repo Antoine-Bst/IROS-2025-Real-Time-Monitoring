@@ -138,11 +138,10 @@ ros::Rate loop_rate(95);
 
   double Kpref = 0.8;
   double Ka = 1.4;
-  bool collision = false;
-  bool stayEnv = true;
+
   BoolInterval collisionItv;
   BoolInterval Monitor_itv;
-bool inclu_obs = false;
+
   IntervalVector Enviro(6);
   Enviro[0] = Interval(-1, 3);    // x interval
   Enviro[1] = Interval(-0.5, 3.5); // y interval
@@ -286,78 +285,91 @@ while (ros::ok() && path_index < N_node)
 	  yinit[4] = Interval(PosYMP);
 	  yinit[5] = Interval(PosZMP);
 	  std::cout << "-----------------Starting Interval Analysis----------------------"<<std::endl;
-ROS_INFO("MP init: %f, %f", PosXMP, PosYMP);
-ROS_INFO("POS init: %f, %f", PosX, PosY);
-ROS_INFO("Updated path_index: %d", path_index);
+        ROS_INFO("MP init: %f, %f", PosXMP, PosYMP);
+        ROS_INFO("POS init: %f, %f", PosX, PosY);
+        ROS_INFO("Updated path_index: %d", path_index);
+
+        std::vector<std::pair<IntervalVector, Interval>> tube_jn;
+
+        ///-----------simulation loop------------
 			for (int i=0; i<Nto; i++){
-				std::cout<<"Number of simulation:"<<i<<std::endl;
-			  switch (k[path_index + i]) {
-						case 1: Xway = 1; Yway = 0; Zway = 0; break;
-						case 2: Xway = 1; Yway = 1; Zway = 0; break;
-						case 3: Xway = 0; Yway = 1; Zway = 0; break;
-						case 4: Xway = -1; Yway = 1; Zway = 0; break;
-						case 5: Xway = -1; Yway = 0; Zway = 0; break;
-						case 6: Xway = -1; Yway = -1; Zway = 0; break;
-						case 7: Xway = 0; Yway = -1; Zway = 0; break;
-						case 8: Xway = 1; Yway = -1; Zway = 0; break;
-						case 9: Xway = 0; Yway = 0; Zway = 1; break;
-			            case 10: Xway = 0; Yway = 0; Zway = -1; break;
-						case 0: Xway = 0; Yway = 0; Zway = 0; break;
-						default: Xway = 0; Yway = 0; Zway = 0; break; // décollage
-					}
+                    std::cout<<"Number of simulation:"<<i<<std::endl;
+                switch (k[path_index + i]) {
+                            case 1: Xway = 1; Yway = 0; Zway = 0; break;
+                            case 2: Xway = 1; Yway = 1; Zway = 0; break;
+                            case 3: Xway = 0; Yway = 1; Zway = 0; break;
+                            case 4: Xway = -1; Yway = 1; Zway = 0; break;
+                            case 5: Xway = -1; Yway = 0; Zway = 0; break;
+                            case 6: Xway = -1; Yway = -1; Zway = 0; break;
+                            case 7: Xway = 0; Yway = -1; Zway = 0; break;
+                            case 8: Xway = 1; Yway = -1; Zway = 0; break;
+                            case 9: Xway = 0; Yway = 0; Zway = 1; break;
+                            case 10: Xway = 0; Yway = 0; Zway = -1; break;
+                            case 0: Xway = 0; Yway = 0; Zway = 0; break;
+                            default: Xway = 0; Yway = 0; Zway = 0; break; // décollage
+                        }
 
-			  Xobj = Interval(1*Xway) + yinit[3]; // point de commande
-			  Yobj = Interval(1*Yway) + yinit[4];
-			  Zobj = Interval(1*Zway) + yinit[5];
-			  std::cout<<"Obj waypoint:"<< Xobj<< Yobj<<std::endl;
-			  //std::cout<< yinit[3] << " MP|init "<< yinit[4] << std::endl;
-			  Function ydot = Function(y, Return(
-				//Ax*(Kpref*(Xway) + y[2]*(-Kpref)) + Bx,
-				//Ax*(Kpref*(Yway) + y[3]*(-Kpref)) + Bx,
-				Ax*(Ka*(-y[0]) + Kpref*(Xobj) + y[3]*(Ka-Kpref)) + Bx,
-				Ax*(Ka*(-y[1]) + Kpref*(Yobj) + y[4]*(Ka-Kpref)) + Bx,
-				Az*(Ka*(-y[2]) + Kpref*(Zobj) + y[5]*(Ka-Kpref)) + Bz,
-				Kpref*(Xobj - y[3]),
-				Kpref*(Yobj - y[4]),
-				Kpref*(Zobj - y[5])
-			  ));
+                Xobj = Interval(1*Xway) + yinit[3]; // point de commande
+                Yobj = Interval(1*Yway) + yinit[4];
+                Zobj = Interval(1*Zway) + yinit[5];
+                std::cout<<"Obj waypoint:"<< Xobj<< Yobj<<std::endl;
+                //std::cout<< yinit[3] << " MP|init "<< yinit[4] << std::endl;
+                Function ydot = Function(y, Return(
+                    //Ax*(Kpref*(Xway) + y[2]*(-Kpref)) + Bx,
+                    //Ax*(Kpref*(Yway) + y[3]*(-Kpref)) + Bx,
+                    Ax*(Ka*(-y[0]) + Kpref*(Xobj) + y[3]*(Ka-Kpref)) + Bx,
+                    Ax*(Ka*(-y[1]) + Kpref*(Yobj) + y[4]*(Ka-Kpref)) + Bx,
+                    Az*(Ka*(-y[2]) + Kpref*(Zobj) + y[5]*(Ka-Kpref)) + Bz,
+                    Kpref*(Xobj - y[3]),
+                    Kpref*(Yobj - y[4]),
+                    Kpref*(Zobj - y[5])
+                ));
 
-			  ivp_ode problem = ivp_ode(ydot, 0, yinit, SYMBOLIC);
-			  simulation simu = simulation(&problem, to, HEUN, 1e-3, 0.01);
+                ivp_ode problem = ivp_ode(ydot, 0, yinit, SYMBOLIC);
+                simulation simu = simulation(&problem, to, HEUN, 1e-3, 0.01);
 
-			  simu.run_simulation();
-			  yinit = simu.get_last_aff();
+                simu.run_simulation();
+                yinit = simu.get_last_aff();
+                
+                if (i==0)
+                {
+                    tube_jn = Sim_to_jn_tube(simu);
+                }
+                else
+                {
+                    tube_jn = Append_tube(tube_jn, Sim_to_jn_tube(simu));
+                }
+                
+                for (int k = 0; k<10*to; k++){
+                Box = simu.get(0.1*k);
+                    trajectory_boxes<< Box[0] <<" ; " <<Box[1] <<" ; " <<Box[2] << std::endl;
+                }
 
-			vector<Satisf_Signal> Phi1; //declaration of subformulas satisfaction signals
-			vector<Satisf_Signal> Phi2; //declaration of subformulas satisfaction signals
-			std::vector<vector<Satisf_Signal>> P_Satisfaction_signals = predicate_satisfaction(simu, predicate_list); //evaluation on the simulated tube
+            }
 
-	        V_p=P_Satisfaction_signals[0]; //assigning every predicate to its satisfaction signals
-	        W_p=P_Satisfaction_signals[1];
-	        P_p=P_Satisfaction_signals[2];
-	        Q_p=P_Satisfaction_signals[3];
-				
-			Phi1 = and_stl(Globally(neg_stl(V_p), {0, to-0.001}),Globally(neg_stl(W_p), {0, to-0.001}));
-			Phi1 = and_stl(Phi1, Globally(neg_stl(P_p), {0, to-0.001}));//obstacle not globaly
-			Phi2 = Globally(Q_p, {0, to-0.001}
-			  for (int k = 0; k<10*to; k++){
-			  Box = simu.get(0.1*k);
-				trajectory_boxes<< Box[0] <<" ; " <<Box[1] <<" ; " <<Box[2] << std::endl;
-			  }
+            ///-----------------STL FORMULA-----------------
+            vector<Satisf_Signal> Phi1; //declaration of subformulas satisfaction signals
+            vector<Satisf_Signal> Phi2; //declaration of subformulas satisfaction signals
+                std::vector<vector<Satisf_Signal>> P_Satisfaction_signals = predicate_satisfaction_jn(tube_jn, predicate_list); //evaluation on the simulated tube
 
-			  }
+                V_p=P_Satisfaction_signals[0]; //assigning every predicate to its satisfaction signals
+                W_p=P_Satisfaction_signals[1];
+                P_p=P_Satisfaction_signals[2];
+                Q_p=P_Satisfaction_signals[3];
+                    
+                Phi1 = and_stl(Globally(neg_stl(V_p), {0, Nto*to-0.001}),Globally(neg_stl(W_p), {0, Nto*to-0.001}));
+                Phi1 = and_stl(Phi1, Globally(neg_stl(P_p), {0, Nto*to-0.001}));//globally not obstacle
+                Phi2 = and_stl(Globally(Q_p, {0, Nto*to-0.001}), Phi1); ///globally stay in Env and no obstacle
 
-			switch (collisionItv) {
-					   case NO: Monitor_itv = YES; break;
-					   case MAYBE: Monitor_itv = MAYBE; break;
-					   case YES: Monitor_itv = NO; break;
+			switch (Phi2[0].first) {
+					   case 0: Monitor_itv = NO; break;
+					   case 2: Monitor_itv = MAYBE; break;
+					   case 1: Monitor_itv = YES; break;
 					   default: Monitor_itv = NO; break; // décollage
 				   }
 			std::cout <<"Monitor Go_flag: " << Monitor_itv <<std::endl;
 			monitor_flag <<"Monitor Go_flag: " << Monitor_itv <<std::endl;
-			stayEnv = true;
-			inclu_obs = false;
-			//collision = false;
+
 			//trajectory_boxes<<"------------------------------------------------------------------"<< std::endl;
 			//trajectory_boxes.close();
 }
