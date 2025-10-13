@@ -330,26 +330,14 @@ ROS_INFO("Updated path_index: %d", path_index);
 
 			vector<Satisf_Signal> Phi1; //declaration of subformulas satisfaction signals
 			vector<Satisf_Signal> Phi2; //declaration of subformulas satisfaction signals
-			std::vector<vector<Satisf_Signal>> P_Satisfaction_signals = predicate_satisfaction(simu, p_list); //evaluation on the simulated tube
+			std::vector<vector<Satisf_Signal>> P_Satisfaction_signals = predicate_satisfaction(simu, predicate_list); //evaluation on the simulated tube
 
 	        V_p=P_Satisfaction_signals[0]; //assigning every predicate to its satisfaction signals
 	        W_p=P_Satisfaction_signals[1];
 	        P_p=P_Satisfaction_signals[2];
 	        Q_p=P_Satisfaction_signals[3];
 				
-					for (const auto& obstacles_element : obstacles_list) {
-
-						
-						collisionItv = simu.has_crossed_b(obstacles_element);
-						
-						if (collisionItv == MAYBE || collisionItv == YES){ break;}
-					}
-			  if (simu.one_in(&obstacles_list) != -1){inclu_obs = true;}
-			//std::cout<<simu.one_in(&obstacles_list)<<"inclusion time"<<std::endl;
-			 if(not simu.stayed_in(Enviro)){stayEnv = false;}
-
-			 if(not stayEnv){collisionItv = YES;}
-			 if (inclu_obs){collisionItv = YES;}
+			Phi1 = and_stl(Globally(V_p, {0, to}),Globally(W_p, {0, to}));
 
 			  for (int k = 0; k<10*to; k++){
 			  Box = simu.get(0.1*k);
