@@ -31,6 +31,10 @@ vector<Satisf_Signal> until_stl(const vector<Satisf_Signal>& list1, const vector
 vector<Satisf_Signal> Finally(const vector<Satisf_Signal>& list1, pair<double, double> time_itv);
 vector<Satisf_Signal> Globally(const vector<Satisf_Signal>& list1, pair<double, double> time_itv);
 std::vector<vector<Satisf_Signal>> predicate_satisfaction(ibex::simulation& sim, const vector<IntervalVector>& predicate_list);
+std::vector<vector<Satisf_Signal>> predicate_satisfaction_jn(const std::vector<std::pair<IntervalVector, Interval>>& jn_box, const vector<IntervalVector>& predicate_list);
 
+//predicate handling
+std::vector<vector<Satisf_Signal>> predicate_satisfaction_jn(const std::vector<std::pair<IntervalVector, Interval>>& jn_box, const vector<IntervalVector>& predicate_list);
+std::vector<std::pair<IntervalVector, Interval>> Append_tube(const std::vector<std::pair<IntervalVector, Interval>>& old_tube, const std::vector<std::pair<IntervalVector, Interval>>& extension_tube);
+std::vector<std::pair<IntervalVector, Interval>> Sim_to_jn_tube(ibex::simulation& sim);
 #endif // CSTL_H
-
