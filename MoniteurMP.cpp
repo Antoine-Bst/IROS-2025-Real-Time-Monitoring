@@ -337,8 +337,9 @@ ROS_INFO("Updated path_index: %d", path_index);
 	        P_p=P_Satisfaction_signals[2];
 	        Q_p=P_Satisfaction_signals[3];
 				
-			Phi1 = and_stl(Globally(V_p, {0, to}),Globally(W_p, {0, to}));
-
+			Phi1 = and_stl(Globally(neg_stl(V_p), {0, to-0.001}),Globally(neg_stl(W_p), {0, to-0.001}));
+			Phi1 = and_stl(Phi1, Globally(neg_stl(P_p), {0, to-0.001}));//obstacle not globaly
+			Phi2 = Globally(Q_p, {0, to-0.001}
 			  for (int k = 0; k<10*to; k++){
 			  Box = simu.get(0.1*k);
 				trajectory_boxes<< Box[0] <<" ; " <<Box[1] <<" ; " <<Box[2] << std::endl;
