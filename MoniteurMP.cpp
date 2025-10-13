@@ -12,6 +12,8 @@
 #include <std_msgs/Int32.h>
 #include <std_msgs/Empty.h>
 #include "rrt_lib/Point3.hpp"
+#include "CSTL.h"
+
 using namespace ibex;
 
 
@@ -184,6 +186,12 @@ X_orig
     for (const auto& box : obstacles_boxes) {
         obstacles_list.push_back(box.toIntervalVector());
     }
+	
+	std::vector<IntervalVector> predicate_list;
+    for (const auto& box : obstacles_boxes) {
+        predicate_list.push_back(box.toIntervalVector());
+    }
+	
   IntervalVector yinit(n);
   IntervalVector Box(n); ///visualisation des trajectoires
   IntervalVector tmp(n);
@@ -342,13 +350,20 @@ ROS_INFO("Updated path_index: %d", path_index);
 			  //std::cout<< Xobj << " | "<< Yobj << std::endl;
 			 // tmp = simu.get_last();
 
-			 // trajectory_boxes<< tmp[3] + Interval(-0.05, 0.05) <<" ; " <<tmp[4] + Interval(-0.05, 0.05) <<" ; " <<tmp[5] + Interval(-0.05, 0.05) << std::endl;
+			vector<Satisf_Signal> Phi1; //declaration of subformulas satisfaction signals
+			vector<Satisf_Signal> Phi2; //declaration of subformulas satisfaction signals
+			std::vector<vector<Satisf_Signal>> P_Satisfaction_signals = predicate_satisfaction(simu, p_list); //evaluation on the simulated tube
 
-			 // Check for collisions
+	        V_p=P_Satisfaction_signals[0]; //assigning every predicate to its satisfaction signals
+	        W_p=P_Satisfaction_signals[1];
+	        P_p=P_Satisfaction_signals[2];
+	        Q_p=P_Satisfaction_signals[3];
+				
 					for (const auto& obstacles_element : obstacles_list) {
 
+						
 						collisionItv = simu.has_crossed_b(obstacles_element);
-
+						
 						if (collisionItv == MAYBE || collisionItv == YES){ break;}
 					}
 			  if (simu.one_in(&obstacles_list) != -1){inclu_obs = true;}
