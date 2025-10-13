@@ -127,19 +127,14 @@ pos_sub = nh_pos.subscribe<geometry_msgs::PoseStamped>("/mocap_node/Robot_1/pose
 ros::Rate loop_rate(95);
   // disturbance bounds
   //const int k[] = {0,1,0,3,0,1,0,3,0,4,0,6,0,7,0,7,0,0,0}; ///tableau de motion primitives
-  //const int k[] = {0,1,3,1,3,4,6,7,7,0,0,0,0};
   const int k[] = {0,0,3,2,3,9,0,0,0,0,0};
       int N_node = sizeof(k) / sizeof(k[0]) - 4;;
   int Nto = 3; //horrizon glissant
   const int Nto_init = Nto;
   int Xway, Yway, Zway;
-  // first row is an initial value
+
   const int n = 6;
-  //double to = 3;
-  int to = 3;
-  /*int Xway = 1;
-  int Yway = 0;
-  int Zway = 0; */
+  double to = 3;
 
   double Kpref = 0.8;
   double Ka = 1.4;
@@ -157,19 +152,6 @@ bool inclu_obs = false;
   Enviro[4] = Interval(-1e8, 1e8); // y interval
   Enviro[5] = Interval(-1e8, 1e8);
 
-  /*int nobs = 1;
-  IntervalVector Obstacles(3);
-  Obstacles[0] = Interval(-0.5, 0.5);
-  Obstacles[1] = Interval(0.5,1);
-  Obstacles[2] = Interval(0, 1);
-X_orig
-    ofstream obstacles;
-    obstacles.open("obstacles.txt");
-  for (int a = 0; a<nobs; a++){
-    obstacles<< Obstacles[0] <<" ; " <<Obstacles[1] <<" ; " <<Obstacles[2] << std::endl;
-  }
-  obstacles.close(); 
-*/
  std::list<Box> obstacles_boxes;
     obstacles_boxes.push_back(Box(0.5 + X_orig, 0.65 + Y_orig, 0.7, 0.35, 1.2, 2.5));
     obstacles_boxes.push_back(Box(0.0 + X_orig, 2.8 + Y_orig,1, 0.5, 1.5, 2));
@@ -191,6 +173,7 @@ X_orig
     for (const auto& box : obstacles_boxes) {
         predicate_list.push_back(box.toIntervalVector());
     }
+	predicate_list.push_back(Enviro);
 	
   IntervalVector yinit(n);
   IntervalVector Box(n); ///visualisation des trajectoires
@@ -223,8 +206,6 @@ X_orig
 
 
     Affine2Vector yinit_aff(yinit, true);
-
-
 
     double PosX = 0;
     double PosY = 0;
@@ -346,9 +327,6 @@ ROS_INFO("Updated path_index: %d", path_index);
 
 			  simu.run_simulation();
 			  yinit = simu.get_last_aff();
-			//yinit = simu.get_last();
-			  //std::cout<< Xobj << " | "<< Yobj << std::endl;
-			 // tmp = simu.get_last();
 
 			vector<Satisf_Signal> Phi1; //declaration of subformulas satisfaction signals
 			vector<Satisf_Signal> Phi2; //declaration of subformulas satisfaction signals
@@ -379,7 +357,6 @@ ROS_INFO("Updated path_index: %d", path_index);
 			  }
 
 			  }
-			//std::cout <<"-------- || collision : " <<collisionItv<<"--stay in env :"<< stayEnv  << std::endl;
 
 			switch (collisionItv) {
 					   case NO: Monitor_itv = YES; break;
