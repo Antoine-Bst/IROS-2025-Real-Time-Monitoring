@@ -383,5 +383,78 @@ std::vector<vector<Satisf_Signal>> predicate_satisfaction(ibex::simulation& sim,
       result.push_back(P_satisf);
     }
 
-  return result;
+  return {result};
+}
+
+
+std::vector<vector<Satisf_Signal>> predicate_satisfaction_jn(const std::vector<std::pair<IntervalVector, Interval>>& jn_box, const vector<IntervalVector>& predicate_list) {
+    
+    std::vector<vector<Satisf_Signal>> result;
+    for (size_t j = 0; j < predicate_list.size(); j++)
+    {
+      std::vector<Satisf_Signal> P_satisf;
+        for (size_t i = 0; i < jn_box.size(); i++)
+        {
+          int s_val = 0;
+          if (jn_box[i].first.is_subset(predicate_list[j]))
+          {
+            s_val = 1;
+          }
+          else if (jn_box[i].first.intersects(predicate_list[j]))
+          {
+            s_val = 2;
+          }
+          
+          if (s_val != 2)
+          {
+            P_satisf.push_back({s_val,{jn_box[i].second.lb(), jn_box[i].second.ub()}});
+          }
+          else
+          {
+            P_satisf.push_back({s_val,{jn_box[i].second.lb(), jn_box[i].second.ub()}});
+          }
+      }
+      result.push_back(P_satisf);
+    }
+
+  return {result};
+}
+
+
+std::vector<std::pair<IntervalVector, Interval>> Append_tube(const std::vector<std::pair<IntervalVector, Interval>>& old_tube, const std::vector<std::pair<IntervalVector, Interval>>& extension_tube){
+
+  std::vector<std::pair<IntervalVector, Interval>>  result = old_tube;
+  std::vector<std::pair<IntervalVector, Interval>>  temp_tube = extension_tube;
+  double end_time = 0.0;
+if (!result.empty()) {
+    end_time = result.back().second.ub();
+}
+             std::cout<<"tube end:"<<end_time<<std::endl;
+if (temp_tube.empty())
+{
+   std::cout<<"c'est la merde"<<std::endl;
+}
+
+  for (size_t i = 0; i < temp_tube.size(); i++)
+  {
+    if (temp_tube[i].second.lb()!=temp_tube[i].second.ub() && temp_tube[i].second.lb()>= 0)
+    {   
+        Interval temp = Interval(temp_tube[i].second.lb() + end_time, temp_tube[i].second.ub() + end_time);
+        temp_tube[i].second = temp;
+        result.push_back(temp_tube[i]);
+    }
+  }
+return result;
+}
+
+
+std::vector<std::pair<IntervalVector, Interval>> Sim_to_jn_tube(ibex::simulation& sim){
+    std::vector<std::pair<IntervalVector, Interval>> jn_box;
+    for (const auto& sol : sim.list_solution_g) {
+        if (sol.box_jn && (sol.time_j.lb()>=0)) { // Ensure it's not NULL
+            jn_box.push_back({*sol.box_j1,sol.time_j}); // Dereference pointer
+        }
+    }
+    //std::cout<<"conversion ok"<<std::endl;
+    return jn_box;
 }
