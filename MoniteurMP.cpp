@@ -139,7 +139,6 @@ ros::Rate loop_rate(95);
   double Kpref = 0.8;
   double Ka = 1.4;
 
-  BoolInterval collisionItv;
   BoolInterval Monitor_itv;
 
   IntervalVector Enviro(6);
